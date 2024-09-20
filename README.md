@@ -11,11 +11,11 @@ A simple ping-pong game written in C with the [Raylib](https://github.com/raysan
 
 ### Key-bindings
 
-*Coming soon... (when the game logic will be interpreted)*
+*Coming soon... (when the game logic will be implemeted)*
 
 ### Screenshots
 
-*Coming soon... (when the game logic will be interpreted)*
+*Coming soon... (when the game logic will be implemeted)*
 
 ## Build the project
 
