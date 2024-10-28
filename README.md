@@ -31,7 +31,7 @@ Different key-bindings are available to move the bars:
 
 ## Build the project
 
-This project can be build with the script `build.sh`. We use the `clang` compiler so make sure it is in your path. The game can also be build with the GNU compiler (`gcc`), it also works.
+This project can be build with the script `build.sh`. We use the `clang` compiler so make sure it is in your path. The game can also be build with the GNU compiler (`gcc`), it also works (you can change in the `build.sh` file).
 
 Some dependencies are required in order to build this project, `raylib` is included in the repo, but you will also need the libraries `GL` (OpenGL), `m`, `pthread` (for multithreading), `dl`, `rt` and `X11`. Use your packet manager to install these libraries.
 
