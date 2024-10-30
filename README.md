@@ -11,29 +11,15 @@ A simple ping-pong game written in C with the [Raylib](https://github.com/raysan
 
 ### Key-bindings
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/main
-*Coming soon... (when the game logic will be implemeted)*
+Different key-bindings are available to move the two bars:
+* Player 1 - Move up : UP key, 
+* Player 1 - Move down : DOWN key,
+* Player 2 - Move up : J key (like in the Vim editor),
+* Player 2 - Move down : K key (like in the Vim editor).
 
 ### Screenshots
 
-*Coming soon... (when the game logic will be implemeted)*
-<<<<<<< HEAD
-=======
-Different key-bindings are available to move the bars:
-* Player 1 - Move up : UP key
-* Player 1 - Move down : DOWN key
-* Player 2 - Move up : J key (like in the Vim editor)
-* Player 2 - Move down : K key (like in the Vim editor)
-
-### Screenshots
-
-*Coming soon... (when the game logic will be implemented)*
->>>>>>> 3271c07 (Updated README.md)
-=======
->>>>>>> origin/main
+*Coming soon... (when the game logic will be fully implemeted)*
 
 ## Build the project
 
