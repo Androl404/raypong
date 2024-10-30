@@ -1,2 +1,19 @@
+# Ignore build folder
 build/
+
+# Ignore clangd LSP garbage
 compile_flags.txt
+
+# Ignore VIM's backup generated files
+*.swp
+*.swo
+*~
+
+# Ignore compiled binaries
+*.o
+*.exe
+*.a
+*.bc
+*.so
+*.so.*
+*.dll
