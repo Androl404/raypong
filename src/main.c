@@ -14,11 +14,11 @@ int main(void) {
     /* OpenSans = LoadFont("/usr/share/fonts/IosevkaNerdFont-Regular.ttf"); */
     /* SetTextureFilter(GetFontDefault().texture, TEXTURE_FILTER_ANISOTROPIC_4X); */
 
-    Smain* smain = state_init();
+    Smain smain = State_init();
     while (!WindowShouldClose()) {
-	state_update(smain);
+	State_update(&smain);
     }
-    state_destroy(smain);
+    State_destroy(&smain);
     CloseWindow();
     
     return 0;
