@@ -9,6 +9,6 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@main
-        - run: ./build.sh
+        steps:
+            - uses: actions/checkout@main
+            - run: ./build.sh
