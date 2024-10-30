@@ -1,20 +1,34 @@
 #include <raylib.h>
+#include <stddef.h>
 
 #include "state.h"
 #include "button.h"
 
-Smain smain;
-
 /*
  * Initiate the game
  * Does not take any argument
- * Returns a pointer to the main struct (Smain)
+ * Returns a main struct (Smain)
  */
-Smain* state_init(void) {
-    Smain* smain_ptr = &smain;
-    smain_ptr->OpenSans = LoadFont("./assets/fonts/Open_Sans/OpenSans-Regular.ttf");
-    smain_ptr->state = 0;
-    return smain_ptr;
+Smain State_init(void) {
+    Smain smain = {
+	LoadFontEx("./assets/fonts/Alegreya/Alegreya-Regular.ttf", 64, 0, 0),
+	0,
+	{
+	    {
+		0,
+		0,
+		GAME_BAR_WIDTH,
+		100,
+	    },
+	    {
+		GetScreenWidth() - 9,
+		0,
+		GAME_BAR_WIDTH,
+		100,
+	    },
+	},
+    };
+    return smain;
 }
 
 /*
@@ -22,11 +36,11 @@ Smain* state_init(void) {
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
  */
-void state_update(Smain* smain) {
+void State_update(Smain* smain) {
     if (smain->state == 0) {
-	welcome_frame(smain);
+	Welcome_frame(smain);
     } else if (smain->state == 1) {
-	game_frame(smain);
+	Game_frame(smain);
     }
 }
 
@@ -35,34 +49,51 @@ void state_update(Smain* smain) {
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
  */
-void welcome_frame(Smain* smain) { 
-    Vector2 center, text_measure;
-    const char home_text[] = "Congrats! You created your first window!";
-	
+void Welcome_frame(Smain* smain) {
+    Vector2 center, text_measure, position;
+    Text main_title = {
+	"Raypong",
+	smain->main_font,
+	64,
+	WHITE,
+    };
+
     center.x = (float) (GetScreenWidth()/2);
     center.y = (float) (GetScreenHeight()/2);
-    text_measure = MeasureTextEx(smain->OpenSans, home_text, 60, 2);
-    center.x -= text_measure.x/2;
-    center.y -= text_measure.y/2;
-	
+    text_measure = MeasureTextEx(main_title.font, main_title.text, main_title.text_size, 2);
+    position.x = center.x - text_measure.x / 2;
+    position.y = center.y - text_measure.y / 2;
+
     BeginDrawing();
     ClearBackground(COLOR_BACKGROUND);
-    DrawTextEx(smain->OpenSans, home_text, center, 60, 2, WHITE);
-    center.x = (float) (GetScreenWidth()/2);
-    center.y = (float) (GetScreenHeight()/2);
-    Button play = {
-	(Rectangle){center.x - 100, center.y - 50 + 150, 200, 100},
-	RED,
+    DrawTextEx(main_title.font, main_title.text,position, main_title.text_size, 2, WHITE);
+
+    Text button_text = {
+	"Play",
+	smain->main_font,
+	50,
+	WHITE,
     };
-    if (is_mouse_over_button(play)) {
-	play.color = BLUE;
+    Button play = {
+	RED,
+	button_text,
+        {
+	    center.x,
+	    center.y + 100,
+	},
+	(Vector2) { 25, 5 },
+    };
+
+    Calculate_button_rectangle(&play);
+    if (Is_mouse_over_button(play)) {
+	play.background_color = BLUE;
     }
     // Change the screen collor when the button is clicked
-    if (is_mouse_over_button(play) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    if (Is_mouse_over_button(play) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 	smain->state = 1;
     }
-    DrawRectangleRec(play.rect, play.color);
-    DrawTextEx(smain->OpenSans, "Click Me", (Vector2){play.rect.x + play.rect.width / 2 - MeasureText("Click Me", 20) / 2, play.rect.y + play.rect.height / 2 - 20 / 2}, 20, 2, WHITE);
+
+    Draw_button(play);
     EndDrawing();
 }
 
@@ -71,8 +102,51 @@ void welcome_frame(Smain* smain) {
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
  */
-void game_frame(Smain* smain) {
-    smain->state = 0;
+void Game_frame(Smain* smain) {
+    BeginDrawing();
+    ClearBackground(COLOR_BACKGROUND);
+    smain->main_structure.bar2.x = GetScreenWidth() - GAME_BAR_WIDTH;
+
+    const int keys1[] = { KEY_DOWN, KEY_UP };
+    const int keys2[] = { KEY_J, KEY_K };
+    
+    Handle_bar_moves(&smain->main_structure.bar1, keys1);
+    Handle_bar_moves(&smain->main_structure.bar2, keys2);
+    
+    Render_game_elements(smain->main_structure);
+    EndDrawing();
+}
+
+/*
+ * Adapts the bar position acoordingly to the user input
+ * Takes a pointer to a rectangle representing one bar and a list with the two keys which can be pressed as arguments
+ * Does not return anything
+ */
+void Handle_bar_moves(Rectangle* bar, const int keys[]) {
+    const size_t speed = 3;
+    if (IsKeyDown(keys[0]) || bar->y > GetScreenHeight() - 100) {
+	if (bar->y >= GetScreenHeight() - 100) {
+	    bar->y = GetScreenHeight() - 100;
+	} else {
+	    bar->y += speed;
+	}
+    } else if (IsKeyDown(keys[1])) {
+	if (bar->y <= 0) {
+	    bar->y = 0;
+	} else {
+	    bar->y -= speed;
+	}
+    }
+}
+
+/*
+ * Renders all the elements of the main game
+ * Takes a game structure as argument
+ * Does not return anything
+ */
+void Render_game_elements(const Game_structure structure) {
+    DrawRectangleRec(structure.bar1, WHITE);
+    DrawRectangleRec(structure.bar2, WHITE);
 }
 
 /*
@@ -80,6 +154,6 @@ void game_frame(Smain* smain) {
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
  */
-void state_destroy(Smain* smain) {
-    UnloadFont(smain->OpenSans);
+void State_destroy(Smain* smain) {
+    UnloadFont(smain->main_font);
 }
