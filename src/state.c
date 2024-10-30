@@ -145,8 +145,8 @@ void Handle_bar_moves(Rectangle* bar, const int keys[]) {
  * Does not return anything
  */
 void Render_game_elements(const Game_structure structure) {
-    DrawRectangleRec(structure.bar1, WHITE);
-    DrawRectangleRec(structure.bar2, WHITE);
+    DrawRectangleRec(structure.bar1, BLUE);
+    DrawRectangleRec(structure.bar2, RED);
 }
 
 /*
