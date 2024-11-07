@@ -8,7 +8,7 @@ mkdir -p build/
 if ! test -e ./raylib/raylib-5.0/src/libraylib.a
 then
     # Compiling Raylib
-    cd raylib/raylib-5.0/src
+    cd raylib-5.0/src
     make PLATFORM=PLATFORM_DESKTOP
     cd -
 fi
@@ -16,12 +16,12 @@ fi
 # Create raylib symlink in build folder
 if ! test -e ./build/raylib.h
 then
-    ln -s ../raylib/raylib-5.0/src/raylib.h build/
+    ln -s ../raylib-5.0/src/raylib.h build/
 fi
 
 if ! test -e ./build/libraylib.a 
 then
-    ln -s ../raylib/raylib-5.0/src/libraylib.a build/
+    ln -s ../raylib-5.0/src/libraylib.a build/
 fi
 
 # Compiler options
