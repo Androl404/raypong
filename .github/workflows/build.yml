@@ -11,8 +11,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@main
-            - name: Install dependencies
+            - name: Update the repos
               run: sudo apt update
+            - name: Install dependencies
               run: sudo apt install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
             - name: Build Raypong
               run: ./build.sh
