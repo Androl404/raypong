@@ -7,7 +7,7 @@ A simple ping-pong game written in C with the [Raylib](https://github.com/raysan
 **Raypong** is a simple ping-pong game which allows two users to play a ping-pong game together, sharing the keyboard. The ball will be faster and faster and the user will need to be quick in order to win the game.
 
 > [!WARNING] 
-> **THIS SOFTWARE IS UNFINISHED AND IS NOT STABLE. DO NOT USE IT IN PRODUCTION!!! I am not responsible for anything that might happen to you!**
+> **THIS SOFTWARE IS UNFINISHED AND IS NOT STABLE. USE IT CAREFULLY!!! The author is not responsible for anything that might happen to you and your system!**
 
 ### Key-bindings
 
@@ -40,4 +40,4 @@ You are free to fork this project and contribute to it (only if you want to) by 
 
 ## Licence
 
-This project is licensed beyond the `MIT`. You are free to do whatever you want with this project. The author can be responsible with anything happening to your system.
+This project is licenced beyond the `MIT` licence. You are free to do whatever you want with this project. The author can not be responsible for anything that happer to your system.
