@@ -11,22 +11,30 @@
  */
 Smain State_init(void) {
     Smain smain = {
-	LoadFontEx("./assets/fonts/Alegreya/Alegreya-Regular.ttf", 64, 0, 0),
-	0,
-	{
-	    {
-		0,
-		0,
-		GAME_BAR_WIDTH,
-		100,
-	    },
-	    {
-		GetScreenWidth() - 9,
-		0,
-		GAME_BAR_WIDTH,
-		100,
-	    },
-	},
+        LoadFontEx("./assets/fonts/Alegreya/Alegreya-Regular.ttf", 64, 0, 0),
+        0,
+        {
+            {
+                0,
+                0,
+                GAME_BAR_WIDTH,
+                100,
+            },
+            {
+                GetScreenWidth() - GAME_BAR_WIDTH,
+                0,
+                GAME_BAR_WIDTH,
+                100,
+            },
+            {
+                20,
+                5,
+                {
+                    GetScreenWidth() / 2,
+                    GetScreenHeight() / 2,
+                },
+            },
+        },
     };
     return smain;
 }
@@ -38,9 +46,9 @@ Smain State_init(void) {
  */
 void State_update(Smain* smain) {
     if (smain->state == 0) {
-	Welcome_frame(smain);
+        Welcome_frame(smain);
     } else if (smain->state == 1) {
-	Game_frame(smain);
+        Game_frame(smain);
     }
 }
 
@@ -52,10 +60,10 @@ void State_update(Smain* smain) {
 void Welcome_frame(Smain* smain) {
     Vector2 center, text_measure, position;
     Text main_title = {
-	"Raypong",
-	smain->main_font,
-	64,
-	WHITE,
+        "Raypong",
+        smain->main_font,
+        64,
+        WHITE,
     };
 
     center.x = (float) (GetScreenWidth()/2);
@@ -69,28 +77,28 @@ void Welcome_frame(Smain* smain) {
     DrawTextEx(main_title.font, main_title.text,position, main_title.text_size, 2, WHITE);
 
     Text button_text = {
-	"Play",
-	smain->main_font,
-	50,
-	WHITE,
+        "Play",
+        smain->main_font,
+        50,
+        WHITE,
     };
     Button play = {
-	RED,
-	button_text,
+        RED,
+        button_text,
         {
-	    center.x,
-	    center.y + 100,
-	},
-	(Vector2) { 25, 5 },
+            center.x,
+            center.y + 100,
+        },
+        (Vector2) { 25, 5 },
     };
 
     Calculate_button_rectangle(&play);
     if (Is_mouse_over_button(play)) {
-	play.background_color = BLUE;
+        play.background_color = BLUE;
     }
     // Change the screen collor when the button is clicked
     if (Is_mouse_over_button(play) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-	smain->state = 1;
+        smain->state = 1;
     }
 
     Draw_button(play);
@@ -123,19 +131,20 @@ void Game_frame(Smain* smain) {
  * Does not return anything
  */
 void Handle_bar_moves(Rectangle* bar, const int keys[]) {
-    const size_t speed = 3;
+    size_t speed = GetScreenHeight() / 150;
+    if (!speed) ++speed;
     if (IsKeyDown(keys[0]) || bar->y > GetScreenHeight() - 100) {
-	if (bar->y >= GetScreenHeight() - 100) {
-	    bar->y = GetScreenHeight() - 100;
-	} else {
-	    bar->y += speed;
-	}
+        if (bar->y >= GetScreenHeight() - 100) {
+            bar->y = GetScreenHeight() - 100;
+        } else {
+            bar->y += speed;
+        }
     } else if (IsKeyDown(keys[1])) {
-	if (bar->y <= 0) {
-	    bar->y = 0;
-	} else {
-	    bar->y -= speed;
-	}
+        if (bar->y <= 0) {
+            bar->y = 0;
+        } else {
+            bar->y -= speed;
+        }
     }
 }
 
@@ -147,6 +156,7 @@ void Handle_bar_moves(Rectangle* bar, const int keys[]) {
 void Render_game_elements(const Game_structure structure) {
     DrawRectangleRec(structure.bar1, BLUE);
     DrawRectangleRec(structure.bar2, RED);
+    DrawCircle(structure.ball.position.x, structure.ball.position.y, structure.ball.radius, WHITE);
 }
 
 /*
