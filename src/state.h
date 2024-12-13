@@ -1,9 +1,9 @@
 #define COLOR_BACKGROUND GetColor(0x151515FF)
-#define GAME_BAR_WIDTH 10
+#define GAME_BAR_WIDTH 14
 
 // Structure for the ball
 typedef struct Ball {
-    float radius;
+    size_t radius;
     size_t speed;
     Vector2 position;
 } Ball;
