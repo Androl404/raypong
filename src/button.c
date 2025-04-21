@@ -37,8 +37,8 @@ void Calculate_button_rectangle(Button* button) {
  */
 void Draw_button(const Button button) {
     Vector2 position = {
-	button.position.x - MeasureTextEx(button.text.font, button.text.text, button.text.text_size, 2).x / 2,
-	button.position.y - MeasureTextEx(button.text.font, button.text.text, button.text.text_size, 2).y / 2,
+    button.position.x - MeasureTextEx(button.text.font, button.text.text, button.text.text_size, 2).x / 2,
+    button.position.y - MeasureTextEx(button.text.font, button.text.text, button.text.text_size, 2).y / 2,
     };
     DrawRectangleRec(button.rect, button.background_color);
     DrawTextEx(button.text.font, button.text.text, position, button.text.text_size, 2, button.text.text_color);
