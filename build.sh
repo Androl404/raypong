@@ -10,7 +10,7 @@ then
     # Compiling Raylib
     mkdir -p raylib/build/
     cd raylib/build/
-    cmake ..
+    cmake -DCUSTOMIZE_BUILD=ON -DBUILD_EXAMPLES=OFF ..
     make PLATFORM=PLATFORM_DESKTOP
     cd -
 fi
