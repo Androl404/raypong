@@ -18,12 +18,12 @@ fi
 # Create raylib symlink in build folder
 if ! test -e ./build/raylib.h
 then
-    ln -s ../raylib/build/raylib/include/raylib.h build/
+    ln -sf ../raylib/build/raylib/include/raylib.h build/
 fi
 
 if ! test -e ./build/libraylib.a 
 then
-    ln -s ../raylib/build/raylib/libraylib.a build/
+    ln -sf ../raylib/build/raylib/libraylib.a build/
 fi
 
 # Compiler options
