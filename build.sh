@@ -29,10 +29,9 @@ fi
 # Compiler options
 COMPILER="cc" # or gcc (both works)
 CFLAGS="-Wall -Wextra"
-# CINCLUDE="-I./raylib/raylib-5.0/src"
 CINCLUDE="-I./build/"
-# CLINK="-L./raylib/raylib-5.0/src/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
-CLINK="-L./build/ -L/usr/local/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
+CLINK="-L./build/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
+CSTANDART="-std=c23"
 DEBUG="-g"
 
-$COMPILER $DEBUG $CFLAGS -o build/raypong src/*.c $CINCLUDE $CLINK
+$COMPILER $DEBUG $CSTANDART $CFLAGS -o build/raypong src/*.c $CINCLUDE $CLINK
