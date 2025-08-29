@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <stdio.h>
 #include <stddef.h>
 
 #include "state.h"
@@ -12,26 +13,26 @@
 Smain State_init(void) {
     Smain smain = {
         LoadFontEx("./assets/fonts/Alegreya/Alegreya-Regular.ttf", 64, 0, 0),
-        0,
+        WELCOME_FRAME,
         {
             {
                 0,
                 0,
                 GAME_BAR_WIDTH,
-                100,
+                GAME_BAR_HEIGHT
             },
             {
                 GetScreenWidth() - GAME_BAR_WIDTH,
                 0,
                 GAME_BAR_WIDTH,
-                100,
+                GAME_BAR_HEIGHT,
             },
             {
                 20,
                 5,
                 {
-                    GetScreenWidth() / 2,
-                    GetScreenHeight() / 2,
+                    GetScreenWidth() / 2.0,
+                    GetScreenHeight() / 2.0,
                 },
             },
         },
@@ -44,10 +45,10 @@ Smain State_init(void) {
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
  */
-void State_update(Smain* smain) {
-    if (smain->state == 0) {
+void State_update(Smain *smain) {
+    if (smain->state == WELCOME_FRAME) {
         Welcome_frame(smain);
-    } else if (smain->state == 1) {
+    } else if (smain->state == GAME_FRAME) {
         Game_frame(smain);
     }
 }
@@ -66,15 +67,15 @@ void Welcome_frame(Smain* smain) {
         WHITE,
     };
 
-    center.x = (float) (GetScreenWidth()/2);
-    center.y = (float) (GetScreenHeight()/2);
+    center.x = GetScreenWidth() / 2.0;
+    center.y = GetScreenHeight() / 2.0;
     text_measure = MeasureTextEx(main_title.font, main_title.text, main_title.text_size, 2);
     position.x = center.x - text_measure.x / 2;
-    position.y = center.y - text_measure.y / 2;
+    position.y = center.y - text_measure.y / 2 - 20;
 
     BeginDrawing();
     ClearBackground(COLOR_BACKGROUND);
-    DrawTextEx(main_title.font, main_title.text,position, main_title.text_size, 2, WHITE);
+    DrawTextEx(main_title.font, main_title.text, position, main_title.text_size, 2, WHITE);
 
     Text button_text = {
         "Play",
@@ -83,22 +84,23 @@ void Welcome_frame(Smain* smain) {
         WHITE,
     };
     Button play = {
-        RED,
-        button_text,
-        {
-            center.x,
-            center.y + 100,
-        },
-        (Vector2) { 25, 5 },
+      RED,
+      button_text,
+      {
+          center.x,
+          center.y + 45,
+      },
+      (Vector2){30, 0},
+      (Rectangle) {0},
     };
 
     Calculate_button_rectangle(&play);
     if (Is_mouse_over_button(play)) {
-        play.background_color = BLUE;
+        play.background_color = DARKRED;
     }
     // Change the screen collor when the button is clicked
     if (Is_mouse_over_button(play) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        smain->state = 1;
+        smain->state = GAME_FRAME;
     }
 
     Draw_button(play);
@@ -117,25 +119,42 @@ void Game_frame(Smain* smain) {
 
     const int keys1[] = { KEY_DOWN, KEY_UP };
     const int keys2[] = { KEY_J, KEY_K };
-    
-    Handle_bar_moves(&smain->main_structure.bar1, keys1);
-    Handle_bar_moves(&smain->main_structure.bar2, keys2);
-    
+
+    Handle_bar_mouse_movement(&smain->main_structure.bar1);
+    // Handle_bar_keys_movement(&smain->main_structure.bar1, keys1);
+    Handle_bar_keys_movement(&smain->main_structure.bar2, keys2);
+
     Render_game_elements(smain->main_structure);
     EndDrawing();
 }
 
 /*
- * Adapts the bar position acoordingly to the user input
+ * Adapts the bar position acoordingly to the cursor position on the screen
+ * Takes a pointer to a rectangle representing one bar
+ * Does not return anything
+ */
+void Handle_bar_mouse_movement(Rectangle *bar) {
+    int mouse_position_y = GetMouseY();
+    if (mouse_position_y > GetScreenHeight() - GAME_BAR_HEIGHT / 2.0) {
+        bar->y = GetScreenHeight() - GAME_BAR_HEIGHT;
+    } else if (mouse_position_y <= GAME_BAR_HEIGHT / 2.0) {
+        bar->y = 0;
+    } else {
+        bar->y = mouse_position_y - (GAME_BAR_HEIGHT / 2.0);
+    }
+}
+
+/*
+ * Adapts the bar position acoordingly to the user input (keyboard)
  * Takes a pointer to a rectangle representing one bar and a list with the two keys which can be pressed as arguments
  * Does not return anything
  */
-void Handle_bar_moves(Rectangle* bar, const int keys[]) {
-    size_t speed = GetScreenHeight() / 150;
+void Handle_bar_keys_movement(Rectangle* bar, const int keys[]) {
+    size_t speed = GetScreenHeight() / 100;
     if (!speed) ++speed;
-    if (IsKeyDown(keys[0]) || bar->y > GetScreenHeight() - 100) {
-        if (bar->y >= GetScreenHeight() - 100) {
-            bar->y = GetScreenHeight() - 100;
+    if (IsKeyDown(keys[0]) || bar->y > GetScreenHeight() - GAME_BAR_HEIGHT) {
+        if (bar->y >= GetScreenHeight() - GAME_BAR_HEIGHT) {
+            bar->y = GetScreenHeight() - GAME_BAR_HEIGHT;
         } else {
             bar->y += speed;
         }

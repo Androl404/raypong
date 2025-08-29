@@ -1,3 +1,6 @@
+#ifndef BUTTON_H
+#define BUTTON_H
+
 // A struct to hold the button data
 typedef struct Button {
     Color background_color;
@@ -28,3 +31,4 @@ void Calculate_button_rectangle(Button* button);
  */
 void Draw_button(const Button button);
 
+#endif // BUTTON_H
