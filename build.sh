@@ -31,7 +31,7 @@ COMPILER="cc" # or gcc (both works)
 CFLAGS="-Wall -Wextra"
 CINCLUDE="-I./build/"
 CLINK="-L./build/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
-CSTANDART="-std=c23"
+CSTANDART="-std=c17"
 DEBUG="-g"
 
 $COMPILER $DEBUG $CSTANDART $CFLAGS -o build/raypong src/*.c $CINCLUDE $CLINK
