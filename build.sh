@@ -27,7 +27,7 @@ then
 fi
 
 # Compiler options
-COMPILER="cc" # or gcc (both works)
+COMPILER="gcc"
 CFLAGS="-Wall -Wextra"
 CINCLUDE="-I./build/"
 CLINK="-L./build/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
