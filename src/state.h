@@ -13,11 +13,18 @@ enum Game_state {
     GAME_FRAME = 1,
 };
 
+enum Ball_hitting_points {
+    LEFT_SIDE = 0,
+    RIGHT_SIDE = 1,
+};
+
 // Structure for the ball
 typedef struct Ball {
     size_t radius;
     size_t speed;
     Vector2 position;
+    Vector2 speed_vector;
+    enum Ball_hitting_points should_hit;
 } Ball;
 
 // Main game structure with all the elements of the game
@@ -97,5 +104,12 @@ void Handle_bar_mouse_movement(Rectangle *bar);
  * Does not return anything
  */
 [[gnu::deprecated("Use the mouse cursor instead.")]]void Handle_bar_keys_movement(Rectangle* bar, const int keys[]);
+
+/*
+ * Adapts the ball position acoordingly to its speed vector
+ * Takes a pointer to the ball as argument
+ * Does not return anything
+ */
+void Update_ball_position(Game_structure *game);
 
 #endif // STATE_H

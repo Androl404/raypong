@@ -34,6 +34,11 @@ Smain State_init(void) {
                     GetScreenWidth() / 2.0,
                     GetScreenHeight() / 2.0,
                 },
+                {
+                    1,
+                    1,
+                },
+                RIGHT_SIDE,
             },
         },
     };
@@ -84,14 +89,14 @@ void Welcome_frame(Smain* smain) {
         WHITE,
     };
     Button play = {
-      RED,
-      button_text,
-      {
-          center.x,
-          center.y + 45,
-      },
-      (Vector2){30, 0},
-      (Rectangle) {0},
+        RED,
+        button_text,
+        {
+            center.x,
+            center.y + 45,
+        },
+        (Vector2){30, 0},
+        (Rectangle){0},
     };
 
     Calculate_button_rectangle(&play);
@@ -123,6 +128,8 @@ void Game_frame(Smain* smain) {
     Handle_bar_mouse_movement(&smain->main_structure.bar1);
     // Handle_bar_keys_movement(&smain->main_structure.bar1, keys1);
     Handle_bar_keys_movement(&smain->main_structure.bar2, keys2);
+
+    Update_ball_position(&smain->main_structure);
 
     Render_game_elements(smain->main_structure);
     EndDrawing();
@@ -165,6 +172,49 @@ void Handle_bar_keys_movement(Rectangle* bar, const int keys[]) {
             bar->y -= speed;
         }
     }
+}
+
+/*
+ * Adapts the ball position acoordingly to its speed vector
+ * Takes a pointer to the ball as argument
+ * Does not return anything
+ */
+void Update_ball_position(Game_structure *game) {
+    // Check for collision between ball and game rectangles
+    bool collision_bar1 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar1);
+    bool collision_bar2 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar2);
+
+    // Check for collision with one of the game bars
+    if (collision_bar1 && game->ball.should_hit == LEFT_SIDE) {
+        game->ball.speed_vector.x *= -1;
+        game->ball.should_hit = RIGHT_SIDE;
+    } else if (collision_bar2 && game->ball.should_hit == RIGHT_SIDE) {
+        game->ball.speed_vector.x *= -1;
+        game->ball.should_hit = LEFT_SIDE;
+    }
+
+    // Check for windows size collision
+    if ((game->ball.position.y + game->ball.radius) >= GetScreenHeight()) {
+        // Bottom border
+        game->ball.position.y = GetScreenHeight() - game->ball.radius;
+        game->ball.speed_vector.y *= -1;
+    } else if ((game->ball.position.y - game->ball.radius) <= 0) {
+        // Top border
+        game->ball.speed_vector.y *= -1;
+    } else if ((game->ball.position.x + game->ball.radius) >= GetScreenWidth()) {
+        // Right border
+        game->ball.position.x = GetScreenWidth() - game->ball.radius;
+        game->ball.speed_vector.x *= -1;
+        game->ball.should_hit = LEFT_SIDE;
+    } else if ((game->ball.position.x - game->ball.radius) <= 0) {
+        // Left border
+        game->ball.speed_vector.x *= -1;
+        game->ball.should_hit = RIGHT_SIDE;
+    }
+
+    // Update ball position
+    game->ball.position.x += game->ball.speed_vector.x;
+    game->ball.position.y += game->ball.speed_vector.y;
 }
 
 /*
