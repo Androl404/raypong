@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "state.h"
 #include "button.h"
@@ -35,12 +36,13 @@ Smain State_init(void) {
                     GetScreenHeight() / 2.0,
                 },
                 {
-                    1,
-                    1,
+                    5,
+                    5,
                 },
                 RIGHT_SIDE,
             },
         },
+        0,
     };
     return smain;
 }
@@ -129,9 +131,9 @@ void Game_frame(Smain* smain) {
     // Handle_bar_keys_movement(&smain->main_structure.bar1, keys1);
     Handle_bar_keys_movement(&smain->main_structure.bar2, keys2);
 
-    Update_ball_position(&smain->main_structure);
+    Update_ball_position(&smain->main_structure, &smain->score);
 
-    Render_game_elements(smain->main_structure);
+    Render_game_elements(*smain);
     EndDrawing();
 }
 
@@ -179,7 +181,7 @@ void Handle_bar_keys_movement(Rectangle* bar, const int keys[]) {
  * Takes a pointer to the ball as argument
  * Does not return anything
  */
-void Update_ball_position(Game_structure *game) {
+void Update_ball_position(Game_structure *game, int64_t *score) {
     // Check for collision between ball and game rectangles
     bool collision_bar1 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar1);
     bool collision_bar2 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar2);
@@ -188,22 +190,28 @@ void Update_ball_position(Game_structure *game) {
     if (collision_bar1 && game->ball.should_hit == LEFT_SIDE) {
         game->ball.speed_vector.x *= -1;
         game->ball.should_hit = RIGHT_SIDE;
+        *score += 1;
+        game->ball.speed_vector.x += 1;
+        game->ball.speed_vector.y += 1;
     } else if (collision_bar2 && game->ball.should_hit == RIGHT_SIDE) {
         game->ball.speed_vector.x *= -1;
         game->ball.should_hit = LEFT_SIDE;
+        *score += 1;
+        game->ball.speed_vector.x += 1;
+        game->ball.speed_vector.y += 1;
     }
 
     // Check for windows size collision
     if ((game->ball.position.y + game->ball.radius) >= GetScreenHeight()) {
         // Bottom border
-        game->ball.position.y = GetScreenHeight() - game->ball.radius;
+        game->ball.position.y = GetScreenHeight() - game->ball.radius - 1;
         game->ball.speed_vector.y *= -1;
     } else if ((game->ball.position.y - game->ball.radius) <= 0) {
         // Top border
         game->ball.speed_vector.y *= -1;
     } else if ((game->ball.position.x + game->ball.radius) >= GetScreenWidth()) {
         // Right border
-        game->ball.position.x = GetScreenWidth() - game->ball.radius;
+        game->ball.position.x = GetScreenWidth() - game->ball.radius - 1;
         game->ball.speed_vector.x *= -1;
         game->ball.should_hit = LEFT_SIDE;
     } else if ((game->ball.position.x - game->ball.radius) <= 0) {
@@ -222,17 +230,26 @@ void Update_ball_position(Game_structure *game) {
  * Takes a game structure as argument
  * Does not return anything
  */
-void Render_game_elements(const Game_structure structure) {
-    DrawRectangleRec(structure.bar1, BLUE);
-    DrawRectangleRec(structure.bar2, RED);
-    DrawCircle(structure.ball.position.x, structure.ball.position.y, structure.ball.radius, WHITE);
+void Render_game_elements(const Smain game_structure) {
+    DrawRectangleRec(game_structure.main_structure.bar1, BLUE);
+    DrawRectangleRec(game_structure.main_structure.bar2, RED);
+    DrawCircle(game_structure.main_structure.ball.position.x, game_structure.main_structure.ball.position.y, game_structure.main_structure.ball.radius, WHITE);
+    char score_text[30];
+    sprintf(score_text, "Score: %zu", game_structure.score);
+    Text score = {
+        (const char*)score_text,
+        game_structure.main_font,
+        64,
+        WHITE,
+    };
+    DrawTextEx(score.font, score.text, (Vector2){ 50, 30 }, 64, 2, score.text_color);
 }
 
 /*
  * Terminates the game
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
- */
+p */
 void State_destroy(Smain* smain) {
     UnloadFont(smain->main_font);
 }

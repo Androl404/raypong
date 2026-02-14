@@ -1,6 +1,8 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <stdint.h>
+
 // Definitions
 #define COLOR_BACKGROUND GetColor(0x151515FF)
 #define DARKRED CLITERAL(Color){ 200, 41, 55, 255 }
@@ -39,6 +41,7 @@ typedef struct Smain {
     Font main_font;
     enum Game_state state;
     Game_structure main_structure;
+    int64_t score;
 } Smain;
 
 // Structure to hold all of the text information
@@ -89,7 +92,7 @@ void State_destroy(Smain* smain);
  * Takes a game structure as argument
  * Does not return anything
  */
-void Render_game_elements(const Game_structure structure);
+void Render_game_elements(const Smain game_structure);
 
 /*
  * Adapts the bar position acoordingly to the cursor position on the screen
@@ -111,6 +114,6 @@ void Handle_bar_keys_movement(Rectangle* bar, const int keys[]);
  * Takes a pointer to the ball as argument
  * Does not return anything
  */
-void Update_ball_position(Game_structure *game);
+void Update_ball_position(Game_structure *game, int64_t *score);
 
 #endif // STATE_H
