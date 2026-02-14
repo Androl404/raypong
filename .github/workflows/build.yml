@@ -3,50 +3,50 @@ name: Raypong build
 on: [push, pull_request]
 
 jobs:
-    linux_build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@main
-            - name: Update submodule
-              run: git submodule init && git submodule update
-            - name: Update the repos
-              run: sudo apt update
-            - name: Install dependencies
-              run: sudo apt install -y xorg-dev
-            - name: Build Raypong
-              run: ./build.sh
-            - name: Upload build folder
-              uses: actions/upload-artifact@v4
-              with:
-                name: ubuntu-raypong-build
-                path: build/
-    macos_build:
-        runs-on: macos-latest
-        steps:
-            - uses: actions/checkout@main
-            - name: Update submodule
-              run: git submodule init && git submodule update
-            - name: Update the repos
-              run: sudo apt update
-            - name: Build Raypong
-              run: ./build.sh
-            - name: Upload build folder
-              uses: actions/upload-artifact@v4
-              with:
-                name: macos-raypong-build
-                path: build/
-    windows_build:
-        runs-on: windows-latest
-        steps:
-            - uses: actions/checkout@main
-            - name: Update submodule
-              run: git submodule init && git submodule update
-            - name: Update the repos
-              run: sudo apt update
-            - name: Build Raypong
-              run: ./build.sh
-            - name: Upload build folder
-              uses: actions/upload-artifact@v4
-              with:
-                name: windows-raypong-build
-                path: build/
+  linux_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Update submodule
+        run: git submodule init && git submodule update
+      - name: Update the repos
+        run: sudo apt update
+      - name: Install dependencies
+        run: sudo apt install -y xorg-dev
+      - name: Build Raypong
+        run: ./build.sh
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-raypong-build
+          path: build/
+  macos_build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Update submodule
+        run: git submodule init && git submodule update
+      - name: Update the repos
+        run: sudo apt update
+      - name: Build Raypong
+        run: ./build.sh
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-raypong-build
+          path: build/
+  windows_build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Update submodule
+        run: git submodule init && git submodule update
+      - name: Update the repos
+        run: sudo apt update
+      - name: Build Raypong
+        run: ./build.sh
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-raypong-build
+          path: build/
