@@ -45,7 +45,7 @@ cl.exe `
     /Zi `
     /std:c17 `
     /W4 `
-    /MT `
+    /MD `
     /I "build" `
     /I "raylib/src" `
     /Fe:build/raypong.exe `
