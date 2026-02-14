@@ -30,7 +30,15 @@ fi
 COMPILER="gcc"
 CFLAGS="-Wall -Wextra"
 CINCLUDE="-I./build/"
-CLINK="-L./build/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11"
+# Handle linking options based on the operating system
+case "$(uname)" in
+    Darwin)
+        CLINK='-L./build/ -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo -lm -lpthread'
+        ;;
+    *)
+        CLINK='-L./build/ -lraylib -lGL -lm -lpthread -ldl -lrt -lX11'
+        ;;
+esac
 CSTANDART="-std=c17"
 DEBUG="-g"
 
