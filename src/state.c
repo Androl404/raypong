@@ -124,12 +124,10 @@ void Game_frame(Smain* smain) {
     ClearBackground(COLOR_BACKGROUND);
     smain->main_structure.bar2.x = GetScreenWidth() - GAME_BAR_WIDTH;
 
-    const int keys1[] = { KEY_DOWN, KEY_UP };
-    const int keys2[] = { KEY_J, KEY_K };
-
-    Handle_bar_mouse_movement(&smain->main_structure.bar1);
-    // Handle_bar_keys_movement(&smain->main_structure.bar1, keys1);
-    Handle_bar_keys_movement(&smain->main_structure.bar2, keys2);
+    if (smain->main_structure.ball.should_hit == LEFT_SIDE)
+        Handle_bar_mouse_movement(&smain->main_structure.bar1);
+    else
+        Handle_bar_mouse_movement(&smain->main_structure.bar2);
 
     Update_ball_position(&smain->main_structure, &smain->score);
 
@@ -150,29 +148,6 @@ void Handle_bar_mouse_movement(Rectangle *bar) {
         bar->y = 0;
     } else {
         bar->y = mouse_position_y - (GAME_BAR_HEIGHT / 2.0);
-    }
-}
-
-/*
- * Adapts the bar position acoordingly to the user input (keyboard)
- * Takes a pointer to a rectangle representing one bar and a list with the two keys which can be pressed as arguments
- * Does not return anything
- */
-void Handle_bar_keys_movement(Rectangle* bar, const int keys[]) {
-    size_t speed = GetScreenHeight() / 100;
-    if (!speed) ++speed;
-    if (IsKeyDown(keys[0]) || bar->y > GetScreenHeight() - GAME_BAR_HEIGHT) {
-        if (bar->y >= GetScreenHeight() - GAME_BAR_HEIGHT) {
-            bar->y = GetScreenHeight() - GAME_BAR_HEIGHT;
-        } else {
-            bar->y += speed;
-        }
-    } else if (IsKeyDown(keys[1])) {
-        if (bar->y <= 0) {
-            bar->y = 0;
-        } else {
-            bar->y -= speed;
-        }
     }
 }
 
