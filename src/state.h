@@ -103,7 +103,8 @@ void Handle_bar_mouse_movement(Rectangle *bar);
  * Takes a pointer to a rectangle representing one bar and a list with the two keys which can be pressed as arguments
  * Does not return anything
  */
-[[gnu::deprecated("Use the mouse cursor instead.")]]void Handle_bar_keys_movement(Rectangle* bar, const int keys[]);
+void Handle_bar_keys_movement(Rectangle* bar, const int keys[]);
+// [[gnu::deprecated("Use the mouse cursor instead.")]]
 
 /*
  * Adapts the ball position acoordingly to its speed vector
