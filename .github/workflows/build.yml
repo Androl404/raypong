@@ -19,7 +19,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ubuntu-raypong-build
-          path: build/
+          path: |
+            build/
+            assets/*
   macos_build:
     runs-on: macos-latest
     steps:
@@ -32,7 +34,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-raypong-build
-          path: build/
+          path: |
+            build/
+            assets/*
   windows_build:
     runs-on: windows-latest
     steps:
@@ -48,4 +52,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build-folder
-          path: build/
+          path: |
+            build/
+            assets/*
