@@ -11,7 +11,7 @@ if (!(Test-Path "build")) {
 }
 
 # Build raylib with MSVC if not already built
-if (!(Test-Path "raylib/build/Release/raylib.lib")) {
+if (!(Test-Path "raylib/build/raylib/Release/raylib.lib")) {
 
     if (!(Test-Path "raylib/build")) {
         New-Item -ItemType Directory -Path "raylib/build" -Force | Out-Null
@@ -49,7 +49,7 @@ cl.exe `
     /I "raylib/src" `
     /Fe:build/raypong.exe `
     $SRC `
-    "raylib/build/Release/raylib.lib" `
+    "raylib/build/raylib/Release/raylib.lib" `
     opengl32.lib `
     gdi32.lib `
     winmm.lib `
