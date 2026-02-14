@@ -13,6 +13,7 @@
 enum Game_state {
     WELCOME_FRAME = 0,
     GAME_FRAME = 1,
+    LOST_FRAME = 2,
 };
 
 enum Ball_hitting_points {
@@ -81,6 +82,13 @@ void Welcome_frame(Smain* smain);
 void Game_frame(Smain* smain);
 
 /*
+ * Renders the "lost" frame, displaying the score to the user, and allowing him to replay.
+ * Takes a pointer the main struct (Smain) as an argument
+ * Does not return anything
+ */
+void Lost_frame(Smain *smain);
+
+/*
  * Terminates the game
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
@@ -106,6 +114,6 @@ void Handle_bar_mouse_movement(Rectangle *bar);
  * Takes a pointer to the ball as argument
  * Does not return anything
  */
-void Update_ball_position(Game_structure *game, int64_t *score);
+void Update_ball_position(Game_structure *game, int64_t *score, enum Game_state *game_status);
 
 #endif // STATE_H

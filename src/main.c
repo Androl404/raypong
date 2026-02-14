@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "state.h"
 

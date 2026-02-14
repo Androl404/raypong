@@ -57,6 +57,8 @@ void State_update(Smain *smain) {
         Welcome_frame(smain);
     } else if (smain->state == GAME_FRAME) {
         Game_frame(smain);
+    } else if (smain->state == LOST_FRAME) {
+        Lost_frame(smain);
     }
 }
 
@@ -129,9 +131,79 @@ void Game_frame(Smain* smain) {
     else
         Handle_bar_mouse_movement(&smain->main_structure.bar2);
 
-    Update_ball_position(&smain->main_structure, &smain->score);
+    Update_ball_position(&smain->main_structure, &smain->score, &smain->state);
 
     Render_game_elements(*smain);
+    EndDrawing();
+}
+
+/*
+ * Renders the "lost" frame, displaying the score to the user, and allowing him to replay.
+ * Takes a pointer the main struct (Smain) as an argument
+ * Does not return anything
+ */
+void Lost_frame(Smain *smain) {
+    Vector2 center, text_measure, position;
+    char text[30];
+    sprintf(text, "You lost! Score: %zu", smain->score);
+    Text main_title = {
+        text,
+        smain->main_font,
+        64,
+        WHITE,
+    };
+
+    center.x = GetScreenWidth() / 2.0;
+    center.y = GetScreenHeight() / 2.0;
+    text_measure = MeasureTextEx(main_title.font, main_title.text, main_title.text_size, 2);
+    position.x = center.x - text_measure.x / 2;
+    position.y = center.y - text_measure.y / 2 - 20;
+
+    BeginDrawing();
+    ClearBackground(COLOR_BACKGROUND);
+    DrawTextEx(main_title.font, main_title.text, position, main_title.text_size, 2, WHITE);
+
+    Text button_text = {
+        "Play again",
+        smain->main_font,
+        50,
+        WHITE,
+    };
+    Button play = {
+        BLUE,
+        button_text,
+        {
+            center.x,
+            center.y + 45,
+        },
+        (Vector2){30, 0},
+        (Rectangle){0},
+    };
+
+    Calculate_button_rectangle(&play);
+    if (Is_mouse_over_button(play)) {
+        play.background_color = DARKRED;
+    }
+    // Change the screen collor when the button is clicked
+    if (Is_mouse_over_button(play) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        smain->score = 0;
+        smain->state = GAME_FRAME;
+        smain->main_structure.ball = (Ball){
+            20,
+            5,
+            {
+                GetScreenWidth() / 2.0,
+                GetScreenHeight() / 2.0,
+            },
+            {
+                5,
+                5,
+            },
+            RIGHT_SIDE,
+        };
+    }
+
+    Draw_button(play);
     EndDrawing();
 }
 
@@ -156,7 +228,7 @@ void Handle_bar_mouse_movement(Rectangle *bar) {
  * Takes a pointer to the ball as argument
  * Does not return anything
  */
-void Update_ball_position(Game_structure *game, int64_t *score) {
+void Update_ball_position(Game_structure *game, int64_t *score, enum Game_state *game_status) {
     // Check for collision between ball and game rectangles
     bool collision_bar1 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar1);
     bool collision_bar2 = CheckCollisionCircleRec(game->ball.position, game->ball.radius, game->bar2);
@@ -186,13 +258,10 @@ void Update_ball_position(Game_structure *game, int64_t *score) {
         game->ball.speed_vector.y *= -1;
     } else if ((game->ball.position.x + game->ball.radius) >= GetScreenWidth()) {
         // Right border
-        game->ball.position.x = GetScreenWidth() - game->ball.radius - 1;
-        game->ball.speed_vector.x *= -1;
-        game->ball.should_hit = LEFT_SIDE;
+        *game_status = LOST_FRAME;
     } else if ((game->ball.position.x - game->ball.radius) <= 0) {
         // Left border
-        game->ball.speed_vector.x *= -1;
-        game->ball.should_hit = RIGHT_SIDE;
+        *game_status = LOST_FRAME;
     }
 
     // Update ball position
@@ -224,7 +293,7 @@ void Render_game_elements(const Smain game_structure) {
  * Terminates the game
  * Takes a pointer the main struct (Smain) as an argument
  * Does not return anything
-p */
+ */
 void State_destroy(Smain* smain) {
     UnloadFont(smain->main_font);
 }
