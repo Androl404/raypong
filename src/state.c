@@ -36,8 +36,8 @@ Smain State_init(void) {
                     GetScreenHeight() / 2.0,
                 },
                 {
-                    5,
-                    5,
+                    2,
+                    2,
                 },
                 RIGHT_SIDE,
             },
@@ -196,8 +196,8 @@ void Lost_frame(Smain *smain) {
                 GetScreenHeight() / 2.0,
             },
             {
-                5,
-                5,
+                2,
+                2,
             },
             RIGHT_SIDE,
         };
@@ -238,14 +238,14 @@ void Update_ball_position(Game_structure *game, int64_t *score, enum Game_state 
         game->ball.speed_vector.x *= -1;
         game->ball.should_hit = RIGHT_SIDE;
         *score += 1;
-        game->ball.speed_vector.x += 1;
-        game->ball.speed_vector.y += 1;
+        game->ball.speed_vector.x += game->ball.speed_vector.x > 0 ? 0.7 : -0.7;
+        game->ball.speed_vector.y += game->ball.speed_vector.y > 0 ? 0.7 : -0.7;
     } else if (collision_bar2 && game->ball.should_hit == RIGHT_SIDE) {
         game->ball.speed_vector.x *= -1;
         game->ball.should_hit = LEFT_SIDE;
         *score += 1;
-        game->ball.speed_vector.x += 1;
-        game->ball.speed_vector.y += 1;
+        game->ball.speed_vector.x += game->ball.speed_vector.x > 0 ? 0.7 : -0.7;
+        game->ball.speed_vector.y += game->ball.speed_vector.y > 0 ? 0.7 : -0.7;
     }
 
     // Check for windows size collision
